@@ -1,8 +1,8 @@
 """
-python :
-pytorch :
-torchinfo :
-추후에 version 작성하기
+python : 3.8.X
+pytorch : 2.1.X
+torchinfo : 1.8.X
+version 동작하는지 추가 확인필요
 """
 
 import torch
@@ -111,7 +111,7 @@ class Yolov3(nn.Module):
         self.detectlayer_03 = DetectionLayer(0, num_classes)
 
     def forward(self, x):
-        self.feature_map_01, self.feature_map_02, self.feature_map_03 = self.darknet53
+        self.feature_map_01, self.feature_map_02, self.feature_map_03 = self.darknet
 
         x, output_01 = self.yolo_block_01(self.feature_map_03)
         output_01 = self.detectlayer_01(output_01)
