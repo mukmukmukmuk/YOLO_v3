@@ -6,6 +6,7 @@ torchinfo :
 """
 
 import torch
+import matplotlib.pyplot as plt
 from torch import nn
 from torchinfo import summary
 
@@ -98,16 +99,16 @@ class Yolov3(nn.Module):
 
         self.darknet = Darknet53()
 
-        self.yolo_block_01 = YoloBlock(1024, 512)
-        self.detectlayer_01 = DetectionLayer(512, num_classes)
-        self.upsample_01 = Upsampling(512, 256)
+        self.yolo_block_01 = YoloBlock(0 + 0, 0)
+        self.detectlayer_01 = DetectionLayer(0, num_classes)
+        self.upsample_01 = Upsampling(0, 0)
 
-        self.yolo_block_02 = YoloBlock(512 + 256, 256)
-        self.detectlayer_02 = DetectionLayer(256, num_classes)
-        self.upsample_02 = Upsampling(256, 128)
+        self.yolo_block_02 = YoloBlock(0 + 0, 0)
+        self.detectlayer_02 = DetectionLayer(0, num_classes)
+        self.upsample_02 = Upsampling(0, 0)
 
-        self.yolo_block_03 = YoloBlock(256 + 128, 128)
-        self.detectlayer_03 = DetectionLayer(128, num_classes)
+        self.yolo_block_03 = YoloBlock(0 + 0, 0)
+        self.detectlayer_03 = DetectionLayer(0, num_classes)
 
     def forward(self, x):
         self.feature_map_01, self.feature_map_02, self.feature_map_03 = self.darknet53
@@ -148,7 +149,7 @@ GRID_SIZE = [13, 26, 52]
 
 # Define Util & Loss function
 # 참고 자료 : https://www.geeksforgeeks.org/yolov3-from-scratch-using-pytorch/
-def iou(box1, box2):
+def iou(box1, box2, is_pred = True):
 
     # TODO
     iou_score = None
@@ -156,10 +157,45 @@ def iou(box1, box2):
     return iou_score
 
 
+
+def nms(bboxes, iou_threshold, threshold):
+    # TODO
+    bboxes_nms = None
+    return bboxes_nms
+
+
 def convert_cells_to_bboxes():
     # TODO
     converted_bboxes = None
     return converted_bboxes.tolist()
+
+
+def plot_image(image, boxes):
+
+    plt.show()
+
+
+def save_checkpoint(model, optimizer, filename = "dr_bee_checkpoint.ptr.tar"):
+    print("==> Saving checkpoint")
+    checkpoint = {
+        "state_dict": model.state_dict(),
+        "optimizer": optimizer.state_dict(),
+    }
+    torch.save(checkpoint, filename)
+
+
+
+# Function to load checkpoint
+def load_checkpoint(checkpoint_file, model, optimizer, lr, device):
+    print("==> Loading checkpoint")
+    checkpoint = torch.load(checkpoint_file, map_location=device)
+    model.load_state_dict(checkpoint["state_dict"])
+    optimizer.load_state_dict(checkpoint["optimizer"])
+
+    for param_group in optimizer.param_groups:
+        param_group["lr"] = lr
+
+
 
 
 class YoloLoss(nn.Module):
