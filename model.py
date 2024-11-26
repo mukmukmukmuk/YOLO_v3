@@ -2,7 +2,7 @@
 python :
 pytorch :
 torchinfo :
-
+추후에 version 작성하기
 """
 
 import torch
@@ -16,7 +16,7 @@ class BasicBlock(nn.Module):
         super().__init__()
 
         self.conv = nn.Sequential(
-            # TODO (Conv, BatchNorm, LeakyReLU)
+            # TODO : (Conv, BatchNorm, LeakyReLU) 스펙 보고 구현
         )
 
     def forward(self, x):
@@ -25,11 +25,11 @@ class BasicBlock(nn.Module):
 
 # ResidualBlock 정의
 class ResidualBlock(nn.Module):
-    def __init__(self, channels):
+    def __init__(self, channels): # residual block은 input channel 수와 output channel 수가 동일하다.
         super().__init__()
 
         self.residual = nn.Sequential(
-            # TODO
+            # TODO : Spec 보고 구현
         )
 
     def forward(self, x):
@@ -41,14 +41,26 @@ class Darknet53(nn.Module):
     def __init__(self):
         super().__init__()
 
-        # TODO : define darknet53 (conv, res, res, res, res, res)
+        # TODO : define darknet53 (위에서 정의한 Conv block과 Res block 활용)
 
     def forward(self, x):
-        # TODO
+        # TODO : Darknet53에서 output으로 나오는 세가지 feature map 생산
         feature_map_01 = None
         feature_map_02 = None
         feature_map_03 = None
         return feature_map_01, feature_map_02, feature_map_03
+
+
+class Upsampling(nn.Module):
+    def __init__(self, in_channels, out_channels):
+        super().__init__()
+
+        self.upsample = nn.Sequential(
+            # TODO : YOLO Network Architecture에서 Upsampling에 사용
+        )
+
+    def forward(self, x):
+        return self.upsample(x)
 
 
 class YoloBlock(nn.Module):
@@ -61,7 +73,7 @@ class YoloBlock(nn.Module):
     def forward(self, x):
         route = self.route_conv(x)
         output = self.output_conv(route)
-        return route, output
+        return route, output # route의 경우 다음 yolo block으로 전달되고 output의 경우 DetectionLayer로 전달
 
 
 class DetectionLayer(nn.Module):
@@ -69,24 +81,13 @@ class DetectionLayer(nn.Module):
         super().__init__()
 
         self.num_classes = num_classes
-        self.pred = nn.Conv2d(2 * in_channels, (num_classes + 5) * 3, 1)
+        # TODO : YOLO Network에서 output 된 결과를 이용하여 prediction
 
     def forward(self, x):
         output = self.pred(x)
-        # TODO
+        # TODO : output에 추가적인 처리 필요
         return output
 
-
-class Upsampling(nn.Module):
-    def __init__(self, in_channels, out_channels):
-        super().__init__()
-
-        self.upsample = nn.Sequential(
-            # TODO
-        )
-
-    def forward(self, x):
-        return self.upsample(x)
 
 
 class Yolov3(nn.Module):
