@@ -126,6 +126,17 @@ class Yolov3(nn.Module):
         return output_01, output_02, output_03
 
 
+# 모델 확인 코드
+x = torch.randn((1, 3, 640, 640)) # RGB format의 640 x 640 랜덤 이미지
+model = Yolov3(num_classes = 3)
+out = model(x)
+print(out[0].shape) # torch.Size([1, 3, 13, 13, 8]) / B, RGB, cell size, cell size, (c, x, y, w, h) + classes_prob
+print(out[1].shape) # torch.Size([1, 3, 26, 26, 8])
+print(out[2].shape) # torch.Size([1, 3, 52, 52, 8])
+
+# torch summary
+summary(model, input_size = (2, 3, 640, 640), device = "cpu")
+
 # Anchors
 ANCHORS = [
     [(0.28, 0.22), (0.38, 0.48), (0.9, 0.78)],
@@ -136,6 +147,7 @@ ANCHORS = [
 GRID_SIZE = [13, 26, 52]
 
 # Define Util & Loss function
+# 참고 자료 : https://www.geeksforgeeks.org/yolov3-from-scratch-using-pytorch/
 def iou(box1, box2):
 
     # TODO
